@@ -15,3 +15,7 @@ ruby bin/jekyll-page "Example Page" doc
 
 Then add your own content to this page (i.e. `example-page.md`) and change the `title` accordingly.
 
+Existing pages can be edited directly inside GitHub, see [example](https://github.com/StratusPrint/Documentation/edit/master/index.md).
+
+All commits are automatically deployed to [https://docs.stratusprint.com](https://docs.stratusprint.com).
+
