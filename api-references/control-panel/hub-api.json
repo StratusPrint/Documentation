@@ -1,0 +1,144 @@
+{
+  "definitions": {}, 
+  "info": {
+    "title": "Cool product name", 
+    "version": "0.0.0"
+  }, 
+  "paths": {
+    "/nodes": {
+      "get": {
+        "description": "List's all nodes activated on the hub", 
+        "responses": {
+          "200": {
+            "description": "Returns a list of nodes"
+          }
+        }, 
+        "summary": "Get nodes", 
+        "tags": [
+          "nodes"
+        ]
+      }
+    }, 
+    "/nodes/activate": {
+      "get": {
+        "description": "Called by node to activate itself on the hub", 
+        "responses": {
+          "200": {
+            "description": "Returns a list of sensors"
+          }
+        }, 
+        "summary": "Activate Node", 
+        "tags": [
+          "nodes"
+        ]
+      }
+    }, 
+    "/nodes/trigger/callback": {
+      "get": {
+        "description": "Called when node gpio triggered", 
+        "responses": {
+          "200": {
+            "description": "Returns node data"
+          }
+        }, 
+        "summary": "Trigger Callback", 
+        "tags": [
+          "sensors"
+        ]
+      }
+    }, 
+    "/nodes/{node_id}": {
+      "delete": {
+        "description": "", 
+        "responses": {
+          "200": {
+            "description": "Returns \"Deleted\""
+          }
+        }, 
+        "summary": "Delete a Node", 
+        "tags": [
+          "nodes"
+        ]
+      }, 
+      "get": {
+        "description": "Get Individual Node", 
+        "responses": {
+          "200": {
+            "description": "Returns a Node"
+          }
+        }, 
+        "summary": "Get Node", 
+        "tags": [
+          "nodes"
+        ]
+      }
+    }, 
+    "/nodes/{node_id}/sensors": {
+      "get": {
+        "description": "List's all sensors registered with node", 
+        "responses": {
+          "200": {
+            "description": "Returns a list of sensors"
+          }
+        }, 
+        "summary": "Get a list of sensors", 
+        "tags": [
+          "sensors"
+        ]
+      }, 
+      "post": {
+        "description": "Registers sensor on nodes", 
+        "responses": {
+          "200": {
+            "description": "Returns a list of sensors"
+          }
+        }, 
+        "summary": "Add a Sensor", 
+        "tags": [
+          "sensors"
+        ]
+      }
+    }, 
+    "/sensors/{sensor_id}": {
+      "delete": {
+        "description": "", 
+        "responses": {
+          "200": {
+            "description": "Returns \"Deleted\""
+          }
+        }, 
+        "summary": "Delete a Sensor", 
+        "tags": [
+          "sensors"
+        ]
+      }, 
+      "get": {
+        "description": "Get individual sensor information", 
+        "responses": {
+          "200": {
+            "description": "Returns a Sensor"
+          }
+        }, 
+        "summary": "Get Sensor", 
+        "tags": [
+          "sensors"
+        ]
+      }
+    }, 
+    "/sensors/{sensor_id}/data": {
+      "get": {
+        "description": "Get individual sensor data", 
+        "responses": {
+          "200": {
+            "description": "Returns a data"
+          }
+        }, 
+        "summary": "Get Sensor Data", 
+        "tags": [
+          "sensors"
+        ]
+      }
+    }
+  }, 
+  "swagger": "2.0"
+}
