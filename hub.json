@@ -1,10 +1,205 @@
 {
-  "definitions": {}, 
+  "definitions": {
+    "Post_Printer": {
+      "properties": {
+        "id": {
+          "description": "uid of the printer activating", 
+          "type": "integer"
+        }, 
+        "ip": {
+          "description": "ip address of connecting printer", 
+          "type": "string"
+        }, 
+        "key": {
+          "description": "api key for octopi", 
+          "type": "string"
+        }, 
+        "port": {
+          "description": "port number to communicate on", 
+          "type": "integer"
+        }
+      }, 
+      "required": [
+        "id", 
+        "ip", 
+        "key"
+      ]
+    }, 
+    "Post_Sensor": {
+      "properties": {
+        "id": {
+          "description": "id of the sensor", 
+          "type": "integer"
+        }, 
+        "pin": {
+          "description": "the gpio pin number the sensor is on", 
+          "type": "integer"
+        }, 
+        "type": {
+          "description": "type of sensor", 
+          "enum": [
+            "door", 
+            "temperature", 
+            "trigger", 
+            "led"
+          ], 
+          "type": "string"
+        }
+      }, 
+      "required": [
+        "id", 
+        "type", 
+        "pin"
+      ]
+    }, 
+    "Web_Job": {
+      "properties": {
+        "data": {
+          "$ref": "#/definitions/Web_Job_Data"
+        }, 
+        "id": {
+          "description": "ID of the printer", 
+          "type": "integer"
+        }
+      }, 
+      "required": [
+        "id"
+      ]
+    }, 
+    "Web_Job_Data": {
+      "properties": {
+        "estimated_print_time": {
+          "description": "size of the job in bytes", 
+          "type": "integer"
+        }, 
+        "file": {
+          "$ref": "#/definitions/Web_Job_File"
+        }, 
+        "status": {
+          "description": "status of the job", 
+          "type": "string"
+        }
+      }
+    }, 
+    "Web_Job_File": {
+      "properties": {
+        "date": {
+          "description": "date the file was created", 
+          "type": "string"
+        }, 
+        "name": {
+          "description": "name of the file", 
+          "type": "string"
+        }, 
+        "origin": {
+          "description": "origin of the file", 
+          "type": "string"
+        }, 
+        "size": {
+          "description": "size of the file in bytes", 
+          "type": "integer"
+        }
+      }
+    }, 
+    "Web_Printer": {
+      "properties": {
+        "description": {
+          "description": "user description of the printer", 
+          "type": "string"
+        }, 
+        "friendly_id": {
+          "description": "friendly_id of the printer", 
+          "type": "string"
+        }, 
+        "id": {
+          "description": "id of the printer on web api", 
+          "type": "integer"
+        }, 
+        "manufacturer": {
+          "description": "manufacturer of the printer", 
+          "type": "string"
+        }, 
+        "model": {
+          "description": "model of the printer", 
+          "type": "string"
+        }, 
+        "num_jobs": {
+          "description": "number of jobs the printer current has", 
+          "type": "integer"
+        }, 
+        "status": {
+          "description": "status of the printer", 
+          "type": "string"
+        }
+      }
+    }
+  }, 
   "info": {
     "title": "Cool product name", 
     "version": "0.0.0"
   }, 
   "paths": {
+    "/jobs/{job_id}": {
+      "delete": {
+        "description": "Stops and Deletes Job", 
+        "parameters": [
+          {
+            "description": "ID of the Job", 
+            "in": "path", 
+            "name": "id", 
+            "required": true, 
+            "type": "integer"
+          }
+        ], 
+        "responses": {
+          "200": {
+            "description": "TODO"
+          }
+        }, 
+        "summary": "Delete Job Action", 
+        "tags": [
+          "printer"
+        ]
+      }, 
+      "get": {
+        "description": "Get current job information", 
+        "parameters": [
+          {
+            "description": "ID of the job", 
+            "in": "path", 
+            "name": "id", 
+            "required": true, 
+            "type": "integer"
+          }
+        ], 
+        "responses": {
+          "200": {
+            "description": "Returns current status of job", 
+            "schema": {
+              "$ref": "#/definitions/Web_Job"
+            }
+          }
+        }, 
+        "summary": "Job Action", 
+        "tags": [
+          "printer"
+        ]
+      }
+    }, 
+    "/list": {
+      "get": {
+        "description": "Get list of peripherals currently registered", 
+        "responses": {
+          "200": {
+            "description": "Returns peripherals currently registered"
+          }
+        }, 
+        "summary": "List Peripherals", 
+        "tags": [
+          "sensors"
+        ]
+      }
+    }, 
     "/nodes": {
       "get": {
         "description": "List's all nodes activated on the hub", 
@@ -34,7 +229,7 @@
       }
     }, 
     "/nodes/trigger/callback": {
-      "get": {
+      "post": {
         "description": "Called when node gpio triggered", 
         "responses": {
           "200": {
@@ -88,12 +283,264 @@
       }, 
       "post": {
         "description": "Registers sensor on nodes", 
+        "parameters": [
+          {
+            "description": "Sensor object to be added to the hub", 
+            "in": "body", 
+            "name": "Sensor", 
+            "schema": {
+              "$ref": "#/definitions/Post_Sensor"
+            }
+          }
+        ], 
         "responses": {
-          "200": {
-            "description": "Returns a list of sensors"
+          "201": {
+            "description": "Returns the information received about the sensor"
           }
         }, 
         "summary": "Add a Sensor", 
+        "tags": [
+          "sensors"
+        ]
+      }
+    }, 
+    "/printers": {
+      "get": {
+        "description": "Returns a json of printers", 
+        "produces": [
+          "application/json"
+        ], 
+        "responses": {
+          "200": {
+            "description": "Returns a list of printers", 
+            "schema": {
+              "properties": {
+                "printers": {
+                  "items": {
+                    "$ref": "#/definitions/Web_Printer"
+                  }, 
+                  "type": "array"
+                }
+              }
+            }
+          }
+        }, 
+        "summary": "Printers List", 
+        "tags": [
+          "printer"
+        ]
+      }, 
+      "post": {
+        "description": "Adds or updates printer", 
+        "parameters": [
+          {
+            "description": "Printer object to be added/activated", 
+            "in": "body", 
+            "name": "Printer", 
+            "required": true, 
+            "schema": {
+              "$ref": "#/definitions/Post_Printer"
+            }
+          }
+        ], 
+        "responses": {
+          "201": {
+            "description": "Returns 201 created"
+          }
+        }, 
+        "summary": "Add Printer", 
+        "tags": [
+          "printer"
+        ]
+      }
+    }, 
+    "/printers/{id}": {
+      "get": {
+        "description": "Get printer status", 
+        "parameters": [
+          {
+            "description": "ID of the printer", 
+            "in": "path", 
+            "name": "id", 
+            "required": true, 
+            "type": "integer"
+          }
+        ], 
+        "responses": {
+          "200": {
+            "description": "returns printer information", 
+            "schema": {
+              "$ref": "#/definitions/Web_Printer"
+            }
+          }
+        }, 
+        "summary": "Print Status", 
+        "tags": [
+          "printer"
+        ]
+      }
+    }, 
+    "/printers/{id}/commands": {
+      "post": {
+        "description": "Add print action", 
+        "parameters": [
+          {
+            "description": "ID of printer", 
+            "in": "path", 
+            "name": "id", 
+            "required": true, 
+            "type": "integer"
+          }, 
+          {
+            "description": "Command to be excecuted", 
+            "in": "body", 
+            "name": "Command", 
+            "required": true, 
+            "schema": {
+              "properties": {
+                "id": {
+                  "description": "id of the command", 
+                  "type": "integer"
+                }, 
+                "type": {
+                  "description": "type of command to send [start, pause, cancel, next]", 
+                  "type": "string"
+                }
+              }, 
+              "required": [
+                "id", 
+                "type"
+              ]
+            }
+          }
+        ], 
+        "responses": {
+          "200": {
+            "description": "Returns \"(action) successfully sent to the printer.\""
+          }
+        }, 
+        "summary": "Print Action", 
+        "tags": [
+          "printer"
+        ]
+      }
+    }, 
+    "/printers/{id}/jobs": {
+      "get": {
+        "description": "Get list of queued jobs", 
+        "parameters": [
+          {
+            "description": "ID of the printer", 
+            "in": "path", 
+            "name": "id", 
+            "required": true, 
+            "type": "integer"
+          }
+        ], 
+        "responses": {
+          "200": {
+            "description": "returns json of queued jobs", 
+            "schema": {
+              "properties": {
+                "jobs": {
+                  "items": {
+                    "$ref": "#/definitions/Web_Job"
+                  }, 
+                  "type": "array"
+                }
+              }
+            }
+          }
+        }, 
+        "summary": "Jobs List", 
+        "tags": [
+          "printer"
+        ]
+      }, 
+      "post": {
+        "description": "Add job to printer", 
+        "parameters": [
+          {
+            "description": "ID of the printer", 
+            "in": "path", 
+            "name": "id", 
+            "required": true, 
+            "type": "integer"
+          }, 
+          {
+            "description": "Job to add to the printer", 
+            "in": "body", 
+            "name": "Job", 
+            "required": true, 
+            "schema": {
+              "$ref": "#/definitions/Web_Job"
+            }
+          }
+        ], 
+        "responses": {
+          "201": {
+            "description": "returns \"(job) has been uploaded successfully\""
+          }, 
+          "400": {
+            "description": "no file was provided"
+          }, 
+          "404": {
+            "description": "printer isn't found"
+          }
+        }, 
+        "summary": "Add a Job", 
+        "tags": [
+          "printer"
+        ]
+      }
+    }, 
+    "/printers/{id}/jobs/current": {
+      "get": {
+        "description": "Get current job information", 
+        "parameters": [
+          {
+            "description": "ID of the printer", 
+            "in": "path", 
+            "name": "id", 
+            "required": true, 
+            "type": "integer"
+          }
+        ], 
+        "responses": {
+          "200": {
+            "description": "Returns current status of job", 
+            "schema": {
+              "$ref": "#/definitions/Web_Job"
+            }
+          }
+        }, 
+        "summary": "Jobs Current", 
+        "tags": [
+          "printer"
+        ]
+      }
+    }, 
+    "/register": {
+      "get": {
+        "description": "Get node registration information", 
+        "responses": {
+          "200": {
+            "description": "Returns webpage of result"
+          }
+        }, 
+        "summary": "Get Register Peripheral", 
+        "tags": [
+          "sensors"
+        ]
+      }, 
+      "post": {
+        "description": "Registers node type. Should be done before activating node.", 
+        "responses": {
+          "200": {
+            "description": "Returns \"(id) has been registered as (type)\""
+          }
+        }, 
+        "summary": "Register Peripheral", 
         "tags": [
           "sensors"
         ]
