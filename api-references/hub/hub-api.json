@@ -5,6 +5,20 @@
     "version": "0.0.0"
   }, 
   "paths": {
+    "/list": {
+      "get": {
+        "description": "        Get list of peripherals currently registered", 
+        "responses": {
+          "200": {
+            "description": "Returns peripherals currently registered"
+          }
+        }, 
+        "summary": "List Peripherals", 
+        "tags": [
+          "sensors"
+        ]
+      }
+    }, 
     "/nodes": {
       "get": {
         "description": "List's all nodes activated on the hub", 
@@ -96,6 +110,46 @@
         "summary": "Add a Sensor", 
         "tags": [
           "sensors"
+        ]
+      }
+    }, 
+    "/printers": {
+      "get": {
+        "description": "Returns a json of currently active printers", 
+        "responses": {
+          "200": {
+            "description": "Returns a list of printers"
+          }
+        }, 
+        "summary": "Printers List", 
+        "tags": [
+          "printer"
+        ]
+      }, 
+      "post": {
+        "description": "", 
+        "responses": {
+          "200": {
+            "description": "Returns a printer"
+          }
+        }, 
+        "summary": "Add Printer", 
+        "tags": [
+          "printer"
+        ]
+      }
+    }, 
+    "/printers/{id}": {
+      "get": {
+        "description": "        Get printer status", 
+        "responses": {
+          "200": {
+            "description": "TODO"
+          }
+        }, 
+        "summary": "Print Status", 
+        "tags": [
+          "printer"
         ]
       }
     }, 
