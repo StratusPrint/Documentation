@@ -1,6 +1,6 @@
 # Site title and subtitle. This is used in _includes/header.html
 title: 'StratusPrint'
-subtitle: 'Web based 3D printer management and environmental monitoring system'
+subtitle: 'An open source, web-based 3D printer management system with environment monitoring capabilities.'
 
 # if you wish to integrate disqus on pages set your shortname here
 disqus_shortname: ''
